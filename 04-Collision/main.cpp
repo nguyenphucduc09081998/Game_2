@@ -341,7 +341,7 @@ void LoadResources()
 			temp1.clear();
 		}
 	}
-	textures->Add(ID_TEX_BACKGROUND_1, L"textures\\tilemap\\map1.png", D3DCOLOR_XRGB(255, 255, 255));
+	textures->Add(ID_TEX_BACKGROUND_1, L"textures\\tilemap\\map1.png", BACKGROUND_COLOR);
 	LPDIRECT3DTEXTURE9 texBackGround = textures->Get(ID_TEX_BACKGROUND_1);
 	vector<LPSPRITE> Stage1Sprite;
 	for (int i = 0; i < 47; i++) {
