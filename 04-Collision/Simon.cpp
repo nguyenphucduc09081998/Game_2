@@ -99,7 +99,7 @@ void CSimon::Render(float &xcamera, float &ycamera)
 	int ani;
 	if (state == SIMON_STATE_DIE)
 		ani = SIMON_ANI_DIE;
-	if (level == SIMON_LEVEL_BIG) {
+	//if (level == SIMON_LEVEL_BIG) {
 		
 		 if (state == SIMON_STATE_DOWN) {
 			if (nx > 0) ani = SIMON_ANI_Ngoi_Phai;
@@ -122,12 +122,12 @@ void CSimon::Render(float &xcamera, float &ycamera)
 				else if (vx < 0) ani = SIMON_ANI_BIG_WALKING_LEFT;
 			}
 		}
-	}
-	if (level == SIMON_LEVEL_ATTACT) {
-			if (nx > 0) ani = SIMON_ANI_ATTACT_RIGHT;
-			else ani = SIMON_ANI_ATTACT_LEFT;
-			//level = SIMON_LEVEL_BIG;
-	}
+//	}
+	//if (level == SIMON_LEVEL_ATTACT) {
+	//		if (nx > 0) ani = SIMON_ANI_ATTACT_RIGHT;
+	//		else ani = SIMON_ANI_ATTACT_LEFT;
+	//		//level = SIMON_LEVEL_BIG;
+	//}
 	////giua 2 
 
 	//if (state == SIMON_STATE_ATTACT) {
@@ -232,15 +232,15 @@ void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	left = x;
 	top = y;
 
-	if (level == SIMON_LEVEL_BIG)
-	{
+	//if (level == SIMON_LEVEL_BIG)
+	//{
 		right = x + SIMON_BIG_BBOX_WIDTH;
 		bottom = y + SIMON_BIG_BBOX_HEIGHT;
-	}
-	if(level == SIMON_LEVEL_ATTACT)
-	{
-		right = x + SIMON_SMALL_BBOX_WIDTH;
-		bottom = y + SIMON_SMALL_BBOX_HEIGHT;
-	}
+	//}
+	//if(level == SIMON_LEVEL_ATTACT)
+	//{
+		//right = x + SIMON_SMALL_BBOX_WIDTH;
+		//bottom = y + SIMON_SMALL_BBOX_HEIGHT;
+	//}
 }
 

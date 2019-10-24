@@ -65,7 +65,21 @@ class CSimon : public CGameObject
 public:
 	CSimon() : CGameObject()
 	{
-		level = SIMON_LEVEL_BIG;
+		//SetState(SIMON_STATE_IDLE); 
+		//AddAnimation(100);
+		//level = SIMON_LEVEL_BIG;
+
+		AddAnimation(400);		// dung tai cho phai            0
+		AddAnimation(401);		// dung tai cho trai               1 
+		AddAnimation(402);		// ngoi phai                      2
+		AddAnimation(403);		// ngoi trai                         3
+		AddAnimation(500);		// di phai               4
+		AddAnimation(501);		// di trai         5
+		AddAnimation(300);		//attact left	6
+		AddAnimation(310);     //attact right	7
+		AddAnimation(120);		//	jump right 8
+		AddAnimation(130);     //jump left 9
+		SetPosition(50.0f, 0);
 		untouchable = 0;
 	}
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
