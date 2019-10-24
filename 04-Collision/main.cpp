@@ -8,7 +8,7 @@
 #include "Game.h"
 #include "GameObject.h"
 #include "Textures.h"
-
+#include <string>
 #include "Simon.h"
 #include "Brick.h"
 #include "Goomba.h"
@@ -16,6 +16,7 @@
 #include "fire.h"
 #include "background.h"
 #include "giadoan.h"
+using namespace std;
 
 
 #define WINDOW_CLASS_NAME L"SampleWindow"
@@ -126,14 +127,81 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	TO-DO: Improve this function by loading texture,sprite,animation,object from file
 */
+vector<string> split(const string str)
+{
+	vector<string> tokens;
+//	cout << "str: " << str << "\n";
+	size_t prev = 0, pos = 0;
+	do
+	{
+	//	cout << "do: \n";
+		pos = str.find(" ", prev);
+	//	cout << "pos: " << pos << "\n";
+		string token = str.substr(prev, pos - prev);
+		if (!token.empty()) tokens.push_back(token);
+		prev = pos + 1;
+	} while (pos < str.length() && prev < str.length());
+	return tokens;
+}
+void loadprites(CTextures * textures, CSprites * sprites, CAnimations * animations) {
+	ifstream inFile;
+	inFile.open(L"resource\\sprite.txt");//status{textures = 1, sprites = 2, ani = 3}
+	if (inFile.is_open()) {
+		string value; 
+		int id_image = -1;
+		while (getline(inFile,value)) {
+			if (value == "") {
+				continue;
+			}
+			//cout<< "value: " << value << "\n";
+			vector<string> chuoi = split(value);
+			int status = stoi(chuoi[0]);
+			if (status == 1) { //textures
+				//format: action texId file_path
+				int texId = stoi(chuoi[1]);
+				string fileName = chuoi[2];
+				//đổi lại định data type cho file name
+				wstring stemp = wstring(fileName.begin(), fileName.end());
+				LPCWSTR formatedFileName = stemp.c_str();
+				//add texture
+				textures->Add(texId, formatedFileName, D3DCOLOR_XRGB(255, 0, 255));
+				id_image = texId;
+			}
+			if (status == 2) {// sprite
+				//format: action sprite_id left top right bottom ....
+				int spriteId = stoi(chuoi[1]);
+				int left = stoi(chuoi[2]);
+				int top = stoi(chuoi[3]);
+				int right = stoi(chuoi[4]);
+				int bottom = stoi(chuoi[5]);
+				LPDIRECT3DTEXTURE9 textureHandle = textures->Get(id_image);
+				sprites->Add(spriteId, left, top, right, bottom, textureHandle);
+			}
+			if (status == 3) {// ani
+				//format: action animation_id anmation_time sprite_id_1 sprite_id_2 sprite_id_3 ....
+				int animationID = stoi(chuoi[1]);
+				int animationTime = stoi(chuoi[2]);
+				LPANIMATION ani;
+				ani = new CAnimation(animationTime);
+				for (int i = 3; i < chuoi.size(); i++) {
+					ani->Add(stoi(chuoi[i]));
+				}
+				animations->Add(animationID, ani);
+				//this->Add
+			}
+		}
+	}
+}
 void LoadResources()
 {
 	CTextures * textures = CTextures::GetInstance();
 	CSprites * sprites = CSprites::GetInstance();
 	CAnimations * animations = CAnimations::GetInstance();
-	
+	LPANIMATION ani;//khai bao
+	loadprites(textures, sprites, animations);
+
 	//textures->Add(ID_TEX_BACKGROUND, L"textures\\background.png", D3DCOLOR_XRGB(0, 0, 0));//add background
-	textures->Add(ID_TEX_SIMON, L"textures\\simon.png", D3DCOLOR_XRGB(128, 128, 128));//add simon
+	//textures->Add(ID_TEX_SIMON, L"textures\\simon.png", D3DCOLOR_XRGB(128, 128, 128));//add simon
 	textures->Add(ID_TEX_MISC, L"textures\\2.png", D3DCOLOR_XRGB(176, 224, 248));//
 	textures->Add(ID_TEX_ENEMY, L"textures\\enemies.png", D3DCOLOR_XRGB(3, 26, 110));
 	textures->Add(ID_TEX_FIRE, L"textures\\fire.png", D3DCOLOR_XRGB(0, 0, 0));//add fire
@@ -150,32 +218,27 @@ void LoadResources()
 	sprites->Add(15001, 28, 1, 43, 31, texfire);
 
 	//
-	LPDIRECT3DTEXTURE9 texSimon = textures->Get(ID_TEX_SIMON);
-	sprites->Add(10003, 682, 9, 696, 40, texSimon);
-	sprites->Add(10002, 708, 8, 721, 39, texSimon);		// walk
-	sprites->Add(10001, 734, 9, 750, 39, texSimon);	// idle right
-	sprites->Add(10004, 652, 9, 668, 40, texSimon);	//down right
+	//LPDIRECT3DTEXTURE9 texSimon = textures->Get(ID_TEX_SIMON);
+	//sprites->Add(10003, 682, 9, 696, 40, texSimon);
+	//sprites->Add(10002, 708, 8, 721, 39, texSimon);		// walk
+	//sprites->Add(10001, 734, 9, 750, 39, texSimon);	// idle right
+	//sprites->Add(10004, 652, 9, 668, 40, texSimon);	//down right
+	//sprites->Add(12000, 735, 10, 751, 40, texSimon);	//jump right
+	//sprites->Add(12001, 652, 17, 668, 40, texSimon);
+	//sprites->Add(10011, 80, 10, 97, 40, texSimon);		// idle left
+	//sprites->Add(10012, 109, 9, 121, 39, texSimon);		// walk
+	//sprites->Add(10013, 134, 9, 150, 40, texSimon);
+	//sprites->Add(10014, 163, 9, 180, 40, texSimon);		//down left
+	//sprites->Add(13000, 80, 9, 97, 40, texSimon); //jump left
+	//sprites->Add(13001, 164, 17, 180, 40, texSimon);
+	////sdfg
+	//sprites->Add(20001, 60, 50, 85, 85, texSimon);		//attact left
+	//sprites->Add(20002, 106, 50, 127, 85, texSimon);		
+	//sprites->Add(20003, 150, 50, 177, 85, texSimon);
 
-	sprites->Add(12000, 735, 10, 751, 40, texSimon);	//jump right
-	sprites->Add(12001, 652, 17, 668, 40, texSimon);
-	
-	
-
-	sprites->Add(10011, 80, 10, 97, 40, texSimon);		// idle left
-	sprites->Add(10012, 109, 9, 121, 39, texSimon);		// walk
-	sprites->Add(10013, 134, 9, 150, 40, texSimon);
-	sprites->Add(10014, 163, 9, 180, 40, texSimon);		//down left
-
-	sprites->Add(13000, 80, 9, 97, 40, texSimon); //jump left
-	sprites->Add(13001, 164, 17, 180, 40, texSimon);
-	//sdfg
-	sprites->Add(20001, 60, 50, 85, 85, texSimon);		//attact left
-	sprites->Add(20002, 106, 50, 127, 85, texSimon);		
-	sprites->Add(20003, 150, 50, 177, 85, texSimon);
-
-	sprites->Add(20011, 743, 50, 773, 85, texSimon);		//attact right
-	sprites->Add(20012, 700, 50, 725, 85, texSimon);
-	sprites->Add(20013, 652, 50, 680, 85, texSimon);
+	//sprites->Add(20011, 743, 50, 773, 85, texSimon);		//attact right
+	//sprites->Add(20012, 700, 50, 725, 85, texSimon);
+	//sprites->Add(20013, 652, 50, 680, 85, texSimon);
 	//sdfg
 	LPDIRECT3DTEXTURE9 texMisc = textures->Get(ID_TEX_MISC);
 	sprites->Add(40001, 0, 0, 31, 31, texMisc);
@@ -185,7 +248,7 @@ void LoadResources()
 	sprites->Add(30002, 25, 14, 41, 29, texEnemy);
 	sprites->Add(30003, 45, 21, 61, 29, texEnemy); // die sprite
 
-	LPANIMATION ani;//khai bao
+	
 
 	ani = new CAnimation(100);	// fire
 	ani->Add(15000);
@@ -197,58 +260,58 @@ void LoadResources()
 	//animations->Add(110, ani);
 
 	//fsd
-	ani = new CAnimation(100);	// jump right
-	ani->Add(12000);
-	ani->Add(12001);
-	ani->Add(12001);
-	ani->Add(12000);
-	animations->Add(120, ani);
-	ani = new CAnimation(100);	// jump left
-	ani->Add(13000);
-	ani->Add(13001);
-	ani->Add(13000);
-	ani->Add(13001);
-	animations->Add(130, ani);
+	//ani = new CAnimation(100);	// jump right
+	//ani->Add(12000);
+	//ani->Add(12001);
+	//ani->Add(12001);
+	//ani->Add(12000);
+	//animations->Add(120, ani);
+	//ani = new CAnimation(100);	// jump left
+	//ani->Add(13000);
+	//ani->Add(13001);
+	//ani->Add(13000);
+	//ani->Add(13001);
+	//animations->Add(130, ani);
 
-	ani = new CAnimation(100);	// attact left
-	ani->Add(20001);
-	ani->Add(20002);
-	ani->Add(20003);
-	animations->Add(300, ani);
-	ani = new CAnimation(100);	// attact right
-	ani->Add(20011);
-	ani->Add(20012);
-	ani->Add(20013);
-	animations->Add(310, ani);
-	//fdsdgf
+	//ani = new CAnimation(100);	// attact left
+	//ani->Add(20001);
+	//ani->Add(20002);
+	//ani->Add(20003);
+	//animations->Add(300, ani);
+	//ani = new CAnimation(100);	// attact right
+	//ani->Add(20011);
+	//ani->Add(20012);
+	//ani->Add(20013);
+	//animations->Add(310, ani);
+	////fdsdgf
 
-	ani = new CAnimation(100);	// idle big right
-	ani->Add(10001);
-	animations->Add(400, ani);
+	//ani = new CAnimation(100);	// idle big right
+	//ani->Add(10001);
+	//animations->Add(400, ani);
 
-	ani = new CAnimation(100);	// walk right big
-	ani->Add(10001);
-	ani->Add(10002);
-	ani->Add(10003);
-	animations->Add(500, ani);
+	//ani = new CAnimation(100);	// walk right big
+	//ani->Add(10001);
+	//ani->Add(10002);
+	//ani->Add(10003);
+	//animations->Add(500, ani);
 
-	ani = new CAnimation(100);	// ngoi phai
-	ani->Add(10004);
-	animations->Add(402, ani);
+	//ani = new CAnimation(100);	// ngoi phai
+	//ani->Add(10004);
+	//animations->Add(402, ani);
 
-	ani = new CAnimation(100);	// idle big left
-	ani->Add(10011);
-	animations->Add(401, ani);
+	//ani = new CAnimation(100);	// idle big left
+	//ani->Add(10011);
+	//animations->Add(401, ani);
 
-	ani = new CAnimation(100);	// // walk left big
-	ani->Add(10011);
-	ani->Add(10012);
-	ani->Add(10013);
-	animations->Add(501, ani);
+	//ani = new CAnimation(100);	// // walk left big
+	//ani->Add(10011);
+	//ani->Add(10012);
+	//ani->Add(10013);
+	//animations->Add(501, ani);
 
-	ani = new CAnimation(100);	// ngoi trai
-	ani->Add(10014);
-	animations->Add(403, ani);
+	//ani = new CAnimation(100);	// ngoi trai
+	//ani->Add(10014);
+	//animations->Add(403, ani);
 
 	ani = new CAnimation(100);		// brick
 	ani->Add(40001);
@@ -268,18 +331,18 @@ void LoadResources()
 	//objects.push_back(background);
 
 	simon = new CSimon();
-	simon->AddAnimation(400);		// dung tai cho phai            0
-	simon->AddAnimation(401);		// dung tai cho trai               1 
- 	simon->AddAnimation(402);		// ngoi phai                      2
- 	simon->AddAnimation(403);		// ngoi trai                         3
-	simon->AddAnimation(500);		// di phai               4
-	simon->AddAnimation(501);		// di trai         5
-	simon->AddAnimation(300);		//attact left	6
-	simon->AddAnimation(310);     //attact right	7
-	simon->AddAnimation(120);		//	jump right 8
-	simon->AddAnimation(130);     //jump left 9
+	//simon->AddAnimation(400);		// dung tai cho phai            0
+	//simon->AddAnimation(401);		// dung tai cho trai               1 
+ //	simon->AddAnimation(402);		// ngoi phai                      2
+ //	simon->AddAnimation(403);		// ngoi trai                         3
+	//simon->AddAnimation(500);		// di phai               4
+	//simon->AddAnimation(501);		// di trai         5
+	//simon->AddAnimation(300);		//attact left	6
+	//simon->AddAnimation(310);     //attact right	7
+	//simon->AddAnimation(120);		//	jump right 8
+	//simon->AddAnimation(130);     //jump left 9
 	//simon->AddAnimation(599);		// died                 6
-	simon->SetPosition(50.0f, 0);
+	//simon->SetPosition(50.0f, 0);
 	objects.push_back(simon);
 
 
@@ -405,7 +468,7 @@ void Render()
 
 			objects[i]->Render(x, y);
 			//objects[1]->Render(x, y);
-		//	background->Render(x,y);
+			//background->Render(x,y);
 
 
 		}
