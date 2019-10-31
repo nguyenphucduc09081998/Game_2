@@ -71,8 +71,16 @@ void CGameObject::CalcPotentialCollisions(
 	{
 		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 
-		if (e->t > 0 && e->t <= 1.0f)
-			coEvents.push_back(e);
+		
+		if (e->t > 0 && e->t <= 1.0f) {
+			for (int j = 0; j < listvacham.size(); j++) {
+				if (listvacham[j] == coObjects->at(i)->id_vacham) {
+					coEvents.push_back(e);
+					break;
+				}
+			}
+			//coEvents.push_back(e);
+		}
 		else
 			delete e;
 	}

@@ -7,6 +7,7 @@
 class CFire : public CGameObject
 {
 public:
+	CFire();
 	virtual void Render(float &xcamera, float &ycamera);
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 };

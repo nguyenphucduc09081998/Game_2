@@ -1,5 +1,10 @@
 #include "Brick.h"
 
+CBrick::CBrick()
+{
+	id_vacham = 3;
+}
+
 void CBrick::Render(float &xcamera, float &ycamera)
 {
 	animations[0]->Render(x - xcamera, y - ycamera);

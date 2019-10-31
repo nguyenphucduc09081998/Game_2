@@ -1,5 +1,10 @@
 #include "fire.h"
 
+CFire::CFire()
+{
+	id_vacham = 2;
+}
+
 void CFire::Render(float &xcamera, float&ycamera)
 {
 	animations[0]->Render(x - xcamera, y - ycamera);
