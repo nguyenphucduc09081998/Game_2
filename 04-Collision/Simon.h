@@ -2,6 +2,8 @@
 #include "GameObject.h"
 #include "fire.h"
 #include "Brick.h"
+#include "DN.h"
+#include "roi.h"
 #define SIMON_WALKING_SPEED		0.1f 
 //fgdf
 #define SIMON_
@@ -20,7 +22,8 @@
 #define SIMON_STATE_DOWN			400
 #define SIMON_STATE_DIE				500
 //dsfdgfbng
-#define SIMON_STATE_ATTACT			700 
+#define SIMON_STATE_ATTACT			600 
+//#define SIMON_STATE_ATTACT_RIGHT			700 
 //sfdgddf
 
 #define SIMON_ANI_BIG_IDLE_RIGHT		0
@@ -62,34 +65,36 @@ class CSimon : public CGameObject
 {
 	int level;
 	int untouchable; // biến true false khi simon va chạm trong thời gian sẽ không bị ảnh hưởng bởi va trạm khác
-	DWORD untouchable_start;
+	DWORD timeAttact;
+	DWORD timeJump;
+	bool checkattach = false;
+	bool checkjump = false;
+	
 public:
 	CSimon() : CGameObject()
 	{
-		//SetState(SIMON_STATE_IDLE); 
-		//AddAnimation(100);
-		//level = SIMON_LEVEL_BIG;
 		listvacham.push_back(3);
-		//obType.push_back(2);
-
-		AddAnimation(400);		// dung tai cho phai            0
-		AddAnimation(401);		// dung tai cho trai               1 
-		AddAnimation(402);		// ngoi phai                      2
-		AddAnimation(403);		// ngoi trai                         3
-		AddAnimation(500);		// di phai               4
-		AddAnimation(501);		// di trai         5
-		AddAnimation(300);		//attact left	6
-		AddAnimation(310);     //attact right	7
-		AddAnimation(120);		//	jump right 8
-		AddAnimation(130);     //jump left 9
+		AddAnimation(105);		// dung tai cho phai            0
+		AddAnimation(108);		// dung tai cho trai               1 
+		AddAnimation(107);		// ngoi phai                      2
+		AddAnimation(110);		// ngoi trai                         3
+		AddAnimation(106);		// di phai               4
+		AddAnimation(109);		// di trai         5
+		AddAnimation(103);		//attact left	6
+		AddAnimation(104);     //attact right	7
+		AddAnimation(101);		//	jump right 8
+		AddAnimation(102);     //jump left 9
 		SetPosition(50.0f, 0);
+
 		untouchable = 0;
 	}
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
 	virtual void Render(float &xcamera, float &ycamera);//them x y trong render 
+	void setcheckjump(bool checkattach_f) { this->checkjump = checkattach_f; }
+	bool getcheckjump() { return checkattach; }
 	void SetState(int state);
 	void SetLevel(int l) { level = l; }
-	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
-
+	void StartAttact() { checkattach = true; timeAttact = GetTickCount(); }
+	//void Startjump() { checkjump = true; timeAttact = GetTickCount(); }
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 };

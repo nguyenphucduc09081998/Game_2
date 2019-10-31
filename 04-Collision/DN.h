@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #pragma once
 
 #define SCREEN_WIDTH 260
@@ -21,3 +21,12 @@
 #define ID_textures 1
 #define ID_sprite 2
 #define ID_ani 3
+
+/// những số background
+#define top_to_land 176
+#define height_width_brick 16
+#define width_last_screen 752
+#define width_last_screen_render 505
+
+/// simon
+#define time_attach_frame 450

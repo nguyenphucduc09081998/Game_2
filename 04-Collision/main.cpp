@@ -52,19 +52,22 @@ CSampleKeyHander * keyHandler;
 
 void CSampleKeyHander::OnKeyDown(int KeyCode)
 {
-	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
+	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 	switch (KeyCode)
 	{
-	
 	case DIK_Z:
 		//if(simon->y <= 121)
+			
+			simon->setcheckjump(true);
 			simon->SetState(SIMON_STATE_JUMP);
 		
 		//simon->SetLevel(SIMON_LEVEL_BIG);
 		break;
 	//gsdg
 	case DIK_X://attact
+		simon->StartAttact();
 		simon->SetState(SIMON_STATE_ATTACT);
+		//DebugOut(L"attatc: %d\n", simon->state);
 		//simon->SetLevel(SIMON_LEVEL_ATTACT);
 		break;
 	//dgsdfg
@@ -80,7 +83,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 
 void CSampleKeyHander::OnKeyUp(int KeyCode)
 {
-	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
+	//DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
 }
 
 void CSampleKeyHander::KeyState(BYTE *states)
@@ -94,11 +97,7 @@ void CSampleKeyHander::KeyState(BYTE *states)
 	}
 	else if (game->IsKeyDown(DIK_LEFT))
 		simon->SetState(SIMON_STATE_WALKING_LEFT);
-		//simon->SetLevel(SIMON_LEVEL_ATTACT);
-	//
-	//else if (game->IsKeyDown(DIK_X))
-	//	simon->SetState(SIMON_STATE_ATTACT);
-	//
+
 	else if (game->IsKeyDown(DIK_DOWN))
 		simon->SetState(SIMON_STATE_DOWN);
 		//simon->SetLevel(SIMON_LEVEL_ATTACT);
@@ -205,6 +204,7 @@ void LoadResources()
 	//textures->Add(ID_TEX_SIMON, L"textures\\simon.png", D3DCOLOR_XRGB(128, 128, 128));//add simon
 	//textures->Add(ID_TEX_MISC, L"textures\\gachnen.png", D3DCOLOR_XRGB(176, 224, 248));//
 	//textures->Add(ID_TEX_ENEMY, L"textures\\enemies.png", D3DCOLOR_XRGB(3, 26, 110));
+	textures->Add(ID_TEX_FIRE, L"textures\\fire.png", D3DCOLOR_XRGB(0, 0, 0));//add fire
 	//textures->Add(ID_TEX_FIRE, L"textures\\fire.png", D3DCOLOR_XRGB(0, 0, 0));//add fire
 	//textures->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 
@@ -214,9 +214,9 @@ void LoadResources()
 	//LPDIRECT3DTEXTURE9 texbackground = textures->Get(ID_TEX_BACKGROUND);//add background
 	//sprites->Add(11000, 1, 1, 767, 183, texbackground);
 
-	////LPDIRECT3DTEXTURE9 texfire = textures->Get(ID_TEX_FIRE);//add fire
-	////sprites->Add(15000, 1, 1, 17, 31, texfire);
-	////sprites->Add(15001, 28, 1, 43, 31, texfire);
+	LPDIRECT3DTEXTURE9 texfire = textures->Get(ID_TEX_FIRE);//add fire
+	sprites->Add(15000, 1, 1, 17, 31, texfire);
+	sprites->Add(15001, 28, 1, 43, 31, texfire);
 
 	//
 	//LPDIRECT3DTEXTURE9 texSimon = textures->Get(ID_TEX_SIMON);
@@ -331,12 +331,12 @@ void LoadResources()
 	//background->AddAnimation(110);
 	//objects.push_back(background);
 	
-	//for (int i = 0; i < 5; i++) {//adđ fire
-	//	CFire  *fire = new CFire();
-	//	fire->AddAnimation(150);
-	//	fire->SetPosition(80 + i * 130.0f, 145);
-	//	objects.push_back(fire);
-	//}
+	for (int i = 0; i < 5; i++) {//adđ fire
+		CFire  *fire = new CFire();
+		fire->AddAnimation(150);
+		fire->SetPosition(80 + i * 130.0f, 145);
+		objects.push_back(fire);
+	}
 	simon = new CSimon();
 	objects.push_back(simon);
 	//brick = new CBrick(); 
@@ -370,13 +370,32 @@ void LoadResources()
 	//	brick->SetPosition(84 + i * 48.0f, 90);
 	//	objects.push_back(brick);
 	//}
-
+	for (int i = 1; i < 10; i++)//add nền 
+	{
+		brick = new CBrick();
+		brick->AddAnimation(900);
+		brick->SetPosition(-height_width_brick, top_to_land - (i*height_width_brick));//150 là khoảng cách của nền vs top
+	///	//objects.push_back(brick);
+		//brick->AddAnimation(900);
+		//brick->SetPosition(16, 176);//150 là khoảng cách của nền vs top
+		objects.push_back(brick);
+	}
+	for (int i = 1; i < 10; i++)//add nền 
+	{
+		brick = new CBrick();
+		brick->AddAnimation(900);
+		brick->SetPosition(width_last_screen, top_to_land - (i*height_width_brick));//150 là khoảng cách của nền vs top
+	///	//objects.push_back(brick);
+		//brick->AddAnimation(900);
+		//brick->SetPosition(16, 176);//150 là khoảng cách của nền vs top
+		objects.push_back(brick);
+	}
 
 	for (int i = 0; i < 48; i++)//add nền 
 	{
 		brick = new CBrick();
 		brick->AddAnimation(900);
-		brick->SetPosition(0 +i * 16.0f, 176);//150 là khoảng cách của nền vs top
+		brick->SetPosition(0 + i * height_width_brick, top_to_land);//150 là khoảng cách của nền vs top
 	///	//objects.push_back(brick);
 		//brick->AddAnimation(900);
 		//brick->SetPosition(16, 176);//150 là khoảng cách của nền vs top
@@ -453,11 +472,19 @@ void Render()
 		d3ddv->ColorFill(bb, NULL, BACKGROUND_COLOR); // tô màu màn hình.
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);//màu nào mà trong xuốt thì đừng vẽ
-		float x = simon->x - SCREEN_WIDTH / 2 +20;
+		float temp = (simon->x - SCREEN_WIDTH / 2 + 20);
+		float x = temp;
+		if (temp < width_last_screen_render) {
+			 x = temp;
+		}
+		else {
+			x = width_last_screen_render;
+		}
+			
 		float y = 0;
-		DebugOut(L"[INFO] xxxx = %f\n", x);
+		
 		giadoans[0]->Render(x, y);
-		DebugOut(L"[INFO] objects = %f\n", objects.size());
+		
 		for (int i = 0; i < objects.size(); i++) {
 			//background->
 		   //	void width_map = background->GetBoundingBox();
