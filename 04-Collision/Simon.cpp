@@ -57,36 +57,37 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
 
-			if (dynamic_cast<CGoomba *>(e->obj))
-			{
-				CGoomba *goomba = dynamic_cast<CGoomba *>(e->obj);
-				if (level < SIMON_LEVEL_BIG) {
-					level == SIMON_LEVEL_ATTACT;
-					StartUntouchable();
-					//level = SIMON_LEVEL_BIG;	
-				}
-			
-				// jump on top >> kill Goomba and deflect a bit 
-				//if (e->ny < 0)
-				//{
-				//	if (goomba->GetState() != GOOMBA_STATE_DIE)
-				//	{
-				//		goomba->SetState(GOOMBA_STATE_DIE);
-				//		vy = -SIMON_JUMP_DEFLECT_SPEED;
-				//	}
-				//}
-				//else if (e->nx = 0)
-				//{
-				//	if (untouchable == 0)
-				//	{					
-				//			if (level == SIMON_LEVEL_ATTACT)
-				//			{
-				//				StartUntouchable();
-				//				//level = SIMON_LEVEL_BIG;								
-				//			}						
-				//	}
-				//}
-			}
+			//if (dynamic_cast<CGoomba *>(e->obj))
+			//{
+			//	CGoomba *goomba = dynamic_cast<CGoomba *>(e->obj);
+			//	if (level < SIMON_LEVEL_BIG) {
+			//		level == SIMON_LEVEL_ATTACT;
+			//		StartUntouchable();
+			//		//level = SIMON_LEVEL_BIG;	
+			//	}
+			//
+			//	// jump on top >> kill Goomba and deflect a bit 
+			//	//if (e->ny < 0)
+			//	//{
+			//	//	if (goomba->GetState() != GOOMBA_STATE_DIE)
+			//	//	{
+			//	//		goomba->SetState(GOOMBA_STATE_DIE);
+			//	//		vy = -SIMON_JUMP_DEFLECT_SPEED;
+			//	//	}
+			//	//}
+			//	//else if (e->nx = 0)
+			//	//{
+			//	//	if (untouchable == 0)
+			//	//	{					
+			//	//			if (level == SIMON_LEVEL_ATTACT)
+			//	//			{
+			//	//				StartUntouchable();
+			//	//				//level = SIMON_LEVEL_BIG;								
+			//	//			}						
+			//	//	}
+			//	//}
+			//}
+
 		}
 	}
 	// clean up collision events
@@ -191,7 +192,9 @@ void CSimon::SetState(int state)
 	
 	//fghjsdfsd
 	case SIMON_STATE_ATTACT:
-		
+		DebugOut(L"[INFO] atattactattactattacttact: %d\n");
+		DebugOut(L"[INFO] atattactattactattacttact: %d\n");
+		DebugOut(L"[INFO] atattactattactattacttact: %d\n");
 		break;
 	//dsfdsfsfd
 	case SIMON_STATE_WALKING_RIGHT:

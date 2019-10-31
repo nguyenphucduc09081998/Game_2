@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "GameObject.h"
-
+#include "fire.h"
+#include "Brick.h"
 #define SIMON_WALKING_SPEED		0.1f 
 //fgdf
 #define SIMON_
@@ -68,6 +69,8 @@ public:
 		//SetState(SIMON_STATE_IDLE); 
 		//AddAnimation(100);
 		//level = SIMON_LEVEL_BIG;
+		listvacham.push_back(3);
+		//obType.push_back(2);
 
 		AddAnimation(400);		// dung tai cho phai            0
 		AddAnimation(401);		// dung tai cho trai               1 

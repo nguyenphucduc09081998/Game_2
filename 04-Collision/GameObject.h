@@ -47,6 +47,9 @@ public:
 
 	int state;
 
+	int id_vacham;
+	vector<int> listvacham;
+
 	DWORD dt; 
 
 	vector<LPANIMATION> animations;

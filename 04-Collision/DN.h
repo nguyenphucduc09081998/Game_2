@@ -17,3 +17,7 @@
 #define MAIN_WINDOW_TITLE L"04 - Collision"
 
 #define SIMON_JUMP_SPEED_Y		0.2f
+
+#define ID_textures 1
+#define ID_sprite 2
+#define ID_ani 3
