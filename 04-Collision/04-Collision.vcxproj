@@ -138,6 +138,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="giadoan.h" />
     <ClInclude Include="Goomba.h" />
+    <ClInclude Include="MorningStar.h" />
     <ClInclude Include="Simon.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Textures.h" />
@@ -152,6 +153,7 @@
     <ClCompile Include="giaidoan.cpp" />
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MorningStar.cpp" />
     <ClCompile Include="Simon.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Textures.cpp" />

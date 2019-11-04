@@ -2,7 +2,9 @@
 #include "debug.h"
 #include "Simon.h"
 #include "Game.h"
+#include "Sprites.h"
 #include "Goomba.h"
+#include "MorningStar.h"
 #include <windows.h>
 #include <iostream>
 
@@ -24,11 +26,54 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		CalcPotentialCollisions(coObjects, coEvents);
 
 	// reset untouchable timer if untouchable time has passed
-	if (GetTickCount() - untouchable_start > SIMON_UNTOUCHABLE_TIME)
+	if (GetTickCount() - timeAttact > 450)
 	{
-		untouchable_start = 0;
-		untouchable = 0;
+		
+		timeAttact = 0;
+		checkattach = false;
+		//state = SIMON_STATE_IDLE;
 	}
+	if (GetTickCount() - timeAttact <= 450 && checkattach) {
+		
+		CAnimation *ani = morningstar->getcurrentanimation();
+	//	DebugOut(L"vao: %d\n", ani);
+		int frame = ani->getcurrentFrame();
+		if (nx > 0) {
+			//DebugOut(L"vao: %d\n", frame);
+			if (frame == 0) {
+				morningstar->SetPosition(x - 10, y + 5);
+			}
+			else if (frame == 1) {
+				morningstar->SetPosition(x - 10, y + 5);
+			}
+			else if (frame == 2) {
+				 morningstar->SetPosition(x + 20, y + 5);
+				
+				
+			}
+		}
+		else {
+		//	DebugOut(L"vao: %d\n", frame);
+			if (frame == 0) {
+				morningstar->SetPosition(x +10, y + 5);
+			}
+			else if (frame == 1) {
+				morningstar->SetPosition(x +10, y + 5);
+			}
+			else if (frame == 2) {
+				morningstar->SetPosition(x - 20, y + 5);
+			}
+
+		}
+
+
+			
+		
+		
+	}
+
+
+
 	if (untouchable == 1) {
 		level = SIMON_STATE_ATTACT;
 		untouchable = 0;
@@ -98,19 +143,25 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 void CSimon::Render(float &xcamera, float &ycamera)
 {
 	int ani;
-	if (state == SIMON_STATE_DIE)
-		ani = SIMON_ANI_DIE;
+	//if (state == SIMON_STATE_DIE)
+		//ani = SIMON_ANI_DIE;
 	//if (level == SIMON_LEVEL_BIG) {
-		
-		 if (state == SIMON_STATE_DOWN) {
+	
+		if (state == SIMON_STATE_DOWN) {
 			if (nx > 0) ani = SIMON_ANI_Ngoi_Phai;
 			else ani = SIMON_ANI_Ngoi_Trai;
 		}
 		else
 		{
 			if (vy < 0) {
-				if (nx > 0) ani = SIMON_ANI_Ngoi_Phai;
-				else ani = SIMON_ANI_Ngoi_Trai;
+			/*	if (!checkjump) {
+					if (nx > 0) ani = SIMON_ANI_JUMP_LEFT;
+					else ani = SIMON_ANI_JUMP_RIGHT;
+				}
+				else {*/
+					if (nx > 0) ani = SIMON_ANI_JUMP_LEFT;
+					else ani = SIMON_ANI_JUMP_RIGHT;
+				
 			}
 			else {
 				if (vx == 0)
@@ -123,58 +174,14 @@ void CSimon::Render(float &xcamera, float &ycamera)
 				else if (vx < 0) ani = SIMON_ANI_BIG_WALKING_LEFT;
 			}
 		}
-//	}
-	//if (level == SIMON_LEVEL_ATTACT) {
-	//		if (nx > 0) ani = SIMON_ANI_ATTACT_RIGHT;
-	//		else ani = SIMON_ANI_ATTACT_LEFT;
-	//		//level = SIMON_LEVEL_BIG;
-	//}
-	////giua 2 
+		if (checkattach == true) {
+			
+			morningstar->Render(xcamera, ycamera, nx);
+			if (nx > 0) ani = SIMON_ANI_ATTACT_RIGHT;
+			else ani = SIMON_ANI_ATTACT_LEFT;
+		}
 
-	//if (state == SIMON_STATE_ATTACT) {
-	//	if (vx == 0)
-	//	{
-	//		if (nx > 0) ani = SIMON_ANI_ATTACT_RIGHT;
-	//		else ani = SIMON_ANI_ATTACT_LEFT;
-	//	}
-	//	else if (vx > 0)
-	//		ani = SIMON_ANI_ATTACT_RIGHT;
-	//	else if (vx < 0) ani = SIMON_ANI_ATTACT_LEFT;
-	//}
-	//else if (state == SIMON_STATE_DOWN) {
 
-	//	if (vx == 0)
-	//	{
-	//		if (nx > 0) ani = SIMON_ANI_Ngoi_Phai;
-	//		else ani = SIMON_ANI_Ngoi_Trai;
-	//	}
-	//	else if (vx > 0)
-	//		ani = SIMON_ANI_Ngoi_Phai;
-	//	else if (vx < 0) ani = SIMON_ANI_Ngoi_Trai;
-
-	//}
-	//else
-	//{
-	//	if (vx == 0 && state!= SIMON_STATE_ATTACT)
-	//	{
-	//		if (nx > 0) ani = SIMON_ANI_BIG_IDLE_RIGHT;
-	//		else ani = SIMON_ANI_BIG_IDLE_LEFT;
-	//	}
-	//	else if (vx > 0)
-	//		ani = SIMON_ANI_BIG_WALKING_RIGHT;
-	//	else if (vx < 0) ani = SIMON_ANI_BIG_WALKING_LEFT;
-	//	//
-	//	if (vy < 0) {
-	//		if (vx == 0)
-	//		{
-	//			if (nx > 0) ani = SIMON_ANI_Ngoi_Phai;
-	//			else ani = SIMON_ANI_Ngoi_Trai;
-	//		}
-	//		else if (vx > 0)
-	//			ani = SIMON_ANI_Ngoi_Phai;
-	//		else if (vx < 0) ani = SIMON_ANI_Ngoi_Trai;
-	//	}
-	//}
 	int alpha = 255;
 	if (untouchable) alpha = 128;//128
 	animations[ani]->Render(x - xcamera, y - ycamera, alpha);
@@ -191,11 +198,11 @@ void CSimon::SetState(int state)
 	{
 	
 	//fghjsdfsd
-	case SIMON_STATE_ATTACT:
-		DebugOut(L"[INFO] atattactattactattacttact: %d\n");
-		DebugOut(L"[INFO] atattactattactattacttact: %d\n");
-		DebugOut(L"[INFO] atattactattactattacttact: %d\n");
-		break;
+	//case SIMON_STATE_ATTACT:
+	//	//DebugOut(L"[INFO] atattactattactattacttact: %d\n");
+	//	//DebugOut(L"[INFO] atattactattactattacttact: %d\n");
+	//	//DebugOut(L"[INFO] atattactattactattacttact: %d\n");
+	//	break;
 	//dsfdsfsfd
 	case SIMON_STATE_WALKING_RIGHT:
 		vx = SIMON_WALKING_SPEED;//vx laf van toc di ngang
@@ -206,12 +213,11 @@ void CSimon::SetState(int state)
 		nx = -1;
 		break;
 	case SIMON_STATE_JUMP:
-		DebugOut(L"[INFO] vy: %d\n", vy);
+		//DebugOut(L"[INFO] vy: %d\n", vy);
 		//DebugOut(L"[INFO] vx: %d\n", vx);
-		if (vy == 0) {
+		//if (vy == 0) {
 			vy = -SIMON_JUMP_SPEED_Y;
-		}
-			
+		//}
 		break;
 	case SIMON_STATE_DOWN:
 		vy = 0;
@@ -234,11 +240,9 @@ void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom
 {
 	left = x;
 	top = y;
-
-	//if (level == SIMON_LEVEL_BIG)
-	//{
-		right = x + SIMON_BIG_BBOX_WIDTH;
-		bottom = y + SIMON_BIG_BBOX_HEIGHT;
+	right = x + SIMON_BIG_BBOX_WIDTH;
+	bottom = y + SIMON_BIG_BBOX_HEIGHT;
+	
 	//}
 	//if(level == SIMON_LEVEL_ATTACT)
 	//{
