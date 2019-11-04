@@ -2,7 +2,9 @@
 #include "debug.h"
 #include "Simon.h"
 #include "Game.h"
+#include "Sprites.h"
 #include "Goomba.h"
+#include "MorningStar.h"
 #include <windows.h>
 #include <iostream>
 
@@ -24,12 +26,53 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		CalcPotentialCollisions(coObjects, coEvents);
 
 	// reset untouchable timer if untouchable time has passed
-	if (GetTickCount() - timeAttact > time_attach_frame)
+	if (GetTickCount() - timeAttact > 450)
 	{
+		
 		timeAttact = 0;
 		checkattach = false;
 		//state = SIMON_STATE_IDLE;
 	}
+	if (GetTickCount() - timeAttact <= 450 && checkattach) {
+		
+		CAnimation *ani = morningstar->getcurrentanimation();
+	//	DebugOut(L"vao: %d\n", ani);
+		int frame = ani->getcurrentFrame();
+		if (nx > 0) {
+			//DebugOut(L"vao: %d\n", frame);
+			if (frame == 0) {
+				morningstar->SetPosition(x - 10, y + 5);
+			}
+			else if (frame == 1) {
+				morningstar->SetPosition(x - 10, y + 5);
+			}
+			else if (frame == 2) {
+				 morningstar->SetPosition(x + 20, y + 5);
+				
+				
+			}
+		}
+		else {
+		//	DebugOut(L"vao: %d\n", frame);
+			if (frame == 0) {
+				morningstar->SetPosition(x +10, y + 5);
+			}
+			else if (frame == 1) {
+				morningstar->SetPosition(x +10, y + 5);
+			}
+			else if (frame == 2) {
+				morningstar->SetPosition(x - 20, y + 5);
+			}
+
+		}
+
+
+			
+		
+		
+	}
+
+
 
 	if (untouchable == 1) {
 		level = SIMON_STATE_ATTACT;
@@ -119,7 +162,6 @@ void CSimon::Render(float &xcamera, float &ycamera)
 					if (nx > 0) ani = SIMON_ANI_JUMP_LEFT;
 					else ani = SIMON_ANI_JUMP_RIGHT;
 				
-			
 			}
 			else {
 				if (vx == 0)
@@ -133,6 +175,8 @@ void CSimon::Render(float &xcamera, float &ycamera)
 			}
 		}
 		if (checkattach == true) {
+			
+			morningstar->Render(xcamera, ycamera, nx);
 			if (nx > 0) ani = SIMON_ANI_ATTACT_RIGHT;
 			else ani = SIMON_ANI_ATTACT_LEFT;
 		}

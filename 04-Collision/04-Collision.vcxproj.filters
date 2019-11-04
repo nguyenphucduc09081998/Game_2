@@ -51,6 +51,9 @@
     <ClInclude Include="giadoan.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MorningStar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debug.cpp">
@@ -87,6 +90,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="giaidoan.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MorningStar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -16,6 +16,7 @@
 #include "fire.h"
 #include "background.h"
 #include "giadoan.h"
+#include "MorningStar.h"
 using namespace std;
 
 
@@ -36,6 +37,7 @@ CGame *game;
 CSimon *simon;
 CGoomba *goomba;
 CBrick *brick; 
+CMorningStar * morningstar;
 CBackground *background;
 giadoan *giadoan1;
 vector<LPGAMEOBJECT> objects;
@@ -66,6 +68,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	//gsdg
 	case DIK_X://attact
 		simon->StartAttact();
+		morningstar->StartMorningStar();
 		simon->SetState(SIMON_STATE_ATTACT);
 		//DebugOut(L"attatc: %d\n", simon->state);
 		//simon->SetLevel(SIMON_LEVEL_ATTACT);
@@ -200,136 +203,17 @@ void LoadResources()
 	LPANIMATION ani;//khai bao
 	loadprites(textures, sprites, animations);
 
-	//textures->Add(ID_TEX_BACKGROUND, L"textures\\background.png", D3DCOLOR_XRGB(0, 0, 0));//add background
-	//textures->Add(ID_TEX_SIMON, L"textures\\simon.png", D3DCOLOR_XRGB(128, 128, 128));//add simon
-	//textures->Add(ID_TEX_MISC, L"textures\\gachnen.png", D3DCOLOR_XRGB(176, 224, 248));//
-	//textures->Add(ID_TEX_ENEMY, L"textures\\enemies.png", D3DCOLOR_XRGB(3, 26, 110));
 	textures->Add(ID_TEX_FIRE, L"textures\\fire.png", D3DCOLOR_XRGB(0, 0, 0));//add fire
-	//textures->Add(ID_TEX_FIRE, L"textures\\fire.png", D3DCOLOR_XRGB(0, 0, 0));//add fire
-	//textures->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
-
-
-	
-
-	//LPDIRECT3DTEXTURE9 texbackground = textures->Get(ID_TEX_BACKGROUND);//add background
-	//sprites->Add(11000, 1, 1, 767, 183, texbackground);
 
 	LPDIRECT3DTEXTURE9 texfire = textures->Get(ID_TEX_FIRE);//add fire
 	sprites->Add(15000, 1, 1, 17, 31, texfire);
 	sprites->Add(15001, 28, 1, 43, 31, texfire);
 
 	//
-	//LPDIRECT3DTEXTURE9 texSimon = textures->Get(ID_TEX_SIMON);
-	//sprites->Add(10003, 682, 9, 696, 40, texSimon);
-	//sprites->Add(10002, 708, 8, 721, 39, texSimon);		// walk
-	//sprites->Add(10001, 734, 9, 750, 39, texSimon);	// idle right
-	//sprites->Add(10004, 652, 9, 668, 40, texSimon);	//down right
-	//sprites->Add(12000, 735, 10, 751, 40, texSimon);	//jump right
-	//sprites->Add(12001, 652, 17, 668, 40, texSimon);
-	//sprites->Add(10011, 80, 10, 97, 40, texSimon);		// idle left
-	//sprites->Add(10012, 109, 9, 121, 39, texSimon);		// walk
-	//sprites->Add(10013, 134, 9, 150, 40, texSimon);
-	//sprites->Add(10014, 163, 9, 180, 40, texSimon);		//down left
-	//sprites->Add(13000, 80, 9, 97, 40, texSimon); //jump left
-	//sprites->Add(13001, 164, 17, 180, 40, texSimon);
-	////sdfg
-	//sprites->Add(20001, 60, 50, 85, 85, texSimon);		//attact left
-	//sprites->Add(20002, 106, 50, 127, 85, texSimon);		
-	//sprites->Add(20003, 150, 50, 177, 85, texSimon);
-
-	//sprites->Add(20011, 743, 50, 773, 85, texSimon);		//attact right
-	//sprites->Add(20012, 700, 50, 725, 85, texSimon);
-	//sprites->Add(20013, 652, 50, 680, 85, texSimon);
-	//sdfg
-	//LPDIRECT3DTEXTURE9 texMisc = textures->Get(ID_TEX_MISC);
-	//sprites->Add(40001, 0, 0, 31, 31, texMisc);
-
-	//LPDIRECT3DTEXTURE9 texEnemy = textures->Get(ID_TEX_ENEMY);
-	//sprites->Add(30001, 5, 14, 21, 29, texEnemy);
-	//sprites->Add(30002, 25, 14, 41, 29, texEnemy);
-	//sprites->Add(30003, 45, 21, 61, 29, texEnemy); // die sprite
-
-	//
-
 	ani = new CAnimation(100);	// fire
 	ani->Add(15000);
 	ani->Add(15001);
 	animations->Add(150, ani);
-
-	//ani = new CAnimation(100);	// background
-	//ani->Add(11000);
-	//animations->Add(110, ani);
-
-	//fsd
-	//ani = new CAnimation(100);	// jump right
-	//ani->Add(12000);
-	//ani->Add(12001);
-	//ani->Add(12001);
-	//ani->Add(12000);
-	//animations->Add(120, ani);
-	//ani = new CAnimation(100);	// jump left
-	//ani->Add(13000);
-	//ani->Add(13001);
-	//ani->Add(13000);
-	//ani->Add(13001);
-	//animations->Add(130, ani);
-
-	//ani = new CAnimation(100);	// attact left
-	//ani->Add(20001);
-	//ani->Add(20002);
-	//ani->Add(20003);
-	//animations->Add(300, ani);
-	//ani = new CAnimation(100);	// attact right
-	//ani->Add(20011);
-	//ani->Add(20012);
-	//ani->Add(20013);
-	//animations->Add(310, ani);
-	////fdsdgf
-
-	//ani = new CAnimation(100);	// idle big right
-	//ani->Add(10001);
-	//animations->Add(400, ani);
-
-	//ani = new CAnimation(100);	// walk right big
-	//ani->Add(10001);
-	//ani->Add(10002);
-	//ani->Add(10003);
-	//animations->Add(500, ani);
-
-	//ani = new CAnimation(100);	// ngoi phai
-	//ani->Add(10004);
-	//animations->Add(402, ani);
-
-	//ani = new CAnimation(100);	// idle big left
-	//ani->Add(10011);
-	//animations->Add(401, ani);
-
-	//ani = new CAnimation(100);	// // walk left big
-	//ani->Add(10011);
-	//ani->Add(10012);
-	//ani->Add(10013);
-	//animations->Add(501, ani);
-
-	//ani = new CAnimation(100);	// ngoi trai
-	//ani->Add(10014);
-	//animations->Add(403, ani);
-
-	//ani = new CAnimation(100);		// brick
-	//ani->Add(40001);
-	//animations->Add(601, ani);
-
-	//ani = new CAnimation(300);		// Goomba walk
-	//ani->Add(30001);
-	//ani->Add(30002);
-	//animations->Add(701, ani);
-
-	//ani = new CAnimation(1000);		// Goomba dead
-	//ani->Add(30003);
-	//animations->Add(702, ani);
-	//background
-	//CBackground *background = new CBackground();
-	//background->AddAnimation(110);
-	//objects.push_back(background);
 	
 	for (int i = 0; i < 5; i++) {//adđ fire
 		CFire  *fire = new CFire();
@@ -337,39 +221,14 @@ void LoadResources()
 		fire->SetPosition(80 + i * 130.0f, 145);
 		objects.push_back(fire);
 	}
-	simon = new CSimon();
-	objects.push_back(simon);
-	//brick = new CBrick(); 
-	//for (int i = 0; i < 48; i++)//add nền 
-	//{
-	//	//brick = new CBrick();
-	//	//brick->AddAnimation(900);
-	//	///brick->SetPosition(0 + i * 16.0f, 176);//150 là khoảng cách của nền vs top
-	//	objects.push_back(brick);
-	//}
-	//objects.push_back(brick);
+	morningstar = new CMorningStar();
 
+	simon = new CSimon(morningstar);
+	objects.push_back(simon);
 
 	
+//	objects.push_back(morningstar);
 
-
-	//for (int i = 0; i < 5; i++)//tạo brick
-	//{
-	//	CBrick *brick = new CBrick();
-	//	brick->AddAnimation(601);
-	//	brick->SetPosition(100 + i * 48.0f, 74);
-	//	objects.push_back(brick);
-
-	//	brick = new CBrick();
-	//	brick->AddAnimation(601);
-	//	brick->SetPosition(100 + i * 48.0f, 90);
-	//	objects.push_back(brick);
-
-	//	brick = new CBrick();
-	//	brick->AddAnimation(601);
-	//	brick->SetPosition(84 + i * 48.0f, 90);
-	//	objects.push_back(brick);
-	//}
 	for (int i = 1; i < 10; i++)//add nền 
 	{
 		brick = new CBrick();

@@ -2,8 +2,9 @@
 #include "GameObject.h"
 #include "fire.h"
 #include "Brick.h"
+#include "Sprites.h"
 #include "DN.h"
-#include "roi.h"
+#include "MorningStar.h"
 #define SIMON_WALKING_SPEED		0.1f 
 //fgdf
 #define SIMON_
@@ -69,10 +70,14 @@ class CSimon : public CGameObject
 	DWORD timeJump;
 	bool checkattach = false;
 	bool checkjump = false;
-	
+	int frame;
 public:
-	CSimon() : CGameObject()
+	CMorningStar *morningstar;
+	//CAnimation *ani;
+	CSimon(CMorningStar *ms) : CGameObject()
 	{
+		morningstar = ms;
+		ms->nx = this->nx;
 		listvacham.push_back(3);
 		AddAnimation(105);		// dung tai cho phai            0
 		AddAnimation(108);		// dung tai cho trai               1 
@@ -85,7 +90,7 @@ public:
 		AddAnimation(101);		//	jump right 8
 		AddAnimation(102);     //jump left 9
 		SetPosition(50.0f, 0);
-
+		
 		untouchable = 0;
 	}
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);

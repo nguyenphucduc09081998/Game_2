@@ -64,6 +64,8 @@ public:
 	CAnimation(int defaultTime) { this->defaultTime = defaultTime; lastFrameTime = -1; currentFrame = -1; }
 	void Add(int spriteId, DWORD time = 0);
 	void Render(float x, float y, int alpha=255);
+	int getcurrentFrame() { return currentFrame; }
+	void setcurrentFrame(int current_fr) { this->currentFrame = current_fr; }
 };
 
 typedef CAnimation *LPANIMATION;
