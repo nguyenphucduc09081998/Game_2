@@ -4,12 +4,14 @@
 #include "Game.h"
 #include "Sprites.h"
 #include "Goomba.h"
+#include "fire.h"
 #include "MorningStar.h"
 #include <windows.h>
 #include <iostream>
-
+int xx = 0;
 void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 
@@ -31,28 +33,51 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		
 		timeAttact = 0;
 		checkattach = false;
+		//frame = 0;
 		//state = SIMON_STATE_IDLE;
 	}
 	if (GetTickCount() - timeAttact <= 450 && checkattach) {
-		
+	//	xx++;
 		CAnimation *ani = morningstar->getcurrentanimation();
-	//	DebugOut(L"vao: %d\n", ani);
-		int frame = ani->getcurrentFrame();
+	//DebugOut(L"frame: %d\n", frame);
+		//ani->setcurrentFrame(0);
+		 frame = ani->getcurrentFrame();
+		//int frame =0;
 		if (nx > 0) {
-			//DebugOut(L"vao: %d\n", frame);
+			//DebugOut(L"nx > 0: %d\n");
 			if (frame == 0) {
+				//DebugOut(L"0000:\n");
 				morningstar->SetPosition(x - 10, y + 5);
 			}
 			else if (frame == 1) {
+				//DebugOut(L"111:\n");
 				morningstar->SetPosition(x - 10, y + 5);
 			}
 			else if (frame == 2) {
-				 morningstar->SetPosition(x + 20, y + 5);
-				
-				
+				//DebugOut(L"222:\n");
+				morningstar->SetPosition(x + 20, y + 5);
+				//CFire *fire = new CFire();
+				vector<LPGAMEOBJECT> colidingObjects;		
+				 morningstar->isColidingObjects(coObjects, colidingObjects);
+				 DebugOut(L"colidingObjects111111 %d \n", colidingObjects.size());
+				 for (UINT i = 0; i < colidingObjects.size(); i++)
+				 {
+
+					 LPGAMEOBJECT c = colidingObjects[i];
+					 //c->RenderBoundingBox();
+					 c->checkdestroy = true;
+					// CFire->SetState(FIRE_STATE_DIE);
+					// DebugOut(L"%d \n", colidingObjects.size());
+					 //c->SetState(FIRE_STATE_DIE);
+						
+				 }
+				 //ani->setcurrentFrame(-1);
 			}
+			//
+			
 		}
 		else {
+			//DebugOut(L"nx < 0: %d\n");
 		//	DebugOut(L"vao: %d\n", frame);
 			if (frame == 0) {
 				morningstar->SetPosition(x +10, y + 5);
@@ -62,6 +87,21 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 			else if (frame == 2) {
 				morningstar->SetPosition(x - 20, y + 5);
+				vector<LPGAMEOBJECT> colidingObjects;
+				
+				morningstar->isColidingObjects(coObjects, colidingObjects);
+				DebugOut(L"colidingObjects222222 %d \n", colidingObjects.size());
+				for (UINT i = 0; i < colidingObjects.size(); i++)
+				{
+
+					LPGAMEOBJECT c = colidingObjects[i];
+					c->checkdestroy = true;
+					// CFire->SetState(FIRE_STATE_DIE);
+					
+					 //c->SetState(FIRE_STATE_DIE);
+
+				}
+				colidingObjects.clear();
 			}
 
 		}
@@ -69,7 +109,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 			
 		
-		
+		//ani->setcurrentFrame(-1);
 	}
 
 
@@ -137,7 +177,10 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-	
+	/*
+	DebugOut(L"frame111: %d\n", frame);
+	if(frame ==2) frame = 0;
+	DebugOut(L"frame222: %d\n", frame);*/
 }
 
 void CSimon::Render(float &xcamera, float &ycamera)
@@ -184,9 +227,11 @@ void CSimon::Render(float &xcamera, float &ycamera)
 
 	int alpha = 255;
 	if (untouchable) alpha = 128;//128
+	float xtemp = x - xcamera;
+	float yTemp = y - ycamera;
 	animations[ani]->Render(x - xcamera, y - ycamera, alpha);
 
-	RenderBoundingBox(xcamera, ycamera);
+	//RenderBoundingBox(xcamera, ycamera);
 	//if(x > )
 }
 

@@ -17,6 +17,8 @@
 #include "background.h"
 #include "giadoan.h"
 #include "MorningStar.h"
+#include "Item.h"
+
 using namespace std;
 
 
@@ -37,11 +39,15 @@ CGame *game;
 CSimon *simon;
 CGoomba *goomba;
 CBrick *brick; 
+CItem *item;
 CMorningStar * morningstar;
 CBackground *background;
 giadoan *giadoan1;
 vector<LPGAMEOBJECT> objects;
 vector<giaidoan> giadoans;
+CFire *fire;
+LPANIMATION ani;//khai bao
+//LPANIMATION anix;//khai bao
 
 class CSampleKeyHander : public CKeyEventHandler
 {
@@ -68,10 +74,18 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	//gsdg
 	case DIK_X://attact
 		simon->StartAttact();
-		morningstar->StartMorningStar();
+		// ani = morningstar->getcurrentanimation();
+		//DebugOut(L"frame: %d\n", frame);
+			//ani->setcurrentFrame(0);
+		//ani->setcurrentFrame(-1);
+		morningstar->resetcurrentframe();
+		//anix->setcurrentFrame(-1);
+		//DebugOut(L"attatc: %d\n", simon->setframe(-1));
+	//	morningstar->StartMorningStar();
 		simon->SetState(SIMON_STATE_ATTACT);
 		//DebugOut(L"attatc: %d\n", simon->state);
 		//simon->SetLevel(SIMON_LEVEL_ATTACT);
+		
 		break;
 	//dgsdfg
 	case DIK_A: // reset
@@ -199,12 +213,15 @@ void LoadResources()
 {
 	CTextures * textures = CTextures::GetInstance();
 	CSprites * sprites = CSprites::GetInstance();
+
 	CAnimations * animations = CAnimations::GetInstance();
-	LPANIMATION ani;//khai bao
+	
+
 	loadprites(textures, sprites, animations);
 
 	textures->Add(ID_TEX_FIRE, L"textures\\fire.png", D3DCOLOR_XRGB(0, 0, 0));//add fire
-
+	textures->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(0, 0, 0));//add fire
+	LPDIRECT3DTEXTURE9 bbox = textures->Get(ID_TEX_BBOX);//add fire
 	LPDIRECT3DTEXTURE9 texfire = textures->Get(ID_TEX_FIRE);//add fire
 	sprites->Add(15000, 1, 1, 17, 31, texfire);
 	sprites->Add(15001, 28, 1, 43, 31, texfire);
@@ -216,16 +233,16 @@ void LoadResources()
 	animations->Add(150, ani);
 	
 	for (int i = 0; i < 5; i++) {//adđ fire
-		CFire  *fire = new CFire();
+		fire = new CFire();
 		fire->AddAnimation(150);
 		fire->SetPosition(80 + i * 130.0f, 145);
 		objects.push_back(fire);
 	}
 	morningstar = new CMorningStar();
-
 	simon = new CSimon(morningstar);
 	objects.push_back(simon);
-
+	 
+	
 	
 //	objects.push_back(morningstar);
 
@@ -304,7 +321,7 @@ void Update(DWORD dt)
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 	vector<LPGAMEOBJECT> coObjects;
-	for (int i = 1; i < objects.size(); i++)
+	for (int i = 0; i < objects.size(); i++)
 	{
 		coObjects.push_back(objects[i]);
 
@@ -312,7 +329,20 @@ void Update(DWORD dt)
 
 	for (int i = 0; i < objects.size(); i++)
 	{
-		objects[i]->Update(dt, &coObjects);
+		//checkdestroy
+		if (objects[i]->checkdestroy) {
+			//DebugOut(L"check_des: %d\n", i);
+			
+
+			objects[i]->delete_object(objects, i);
+			//objects[i]->checkdestroy = false;
+
+			
+		}
+		else {
+			objects[i]->Update(dt, &coObjects);
+
+		}
 	}
 }
 

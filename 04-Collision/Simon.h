@@ -70,14 +70,16 @@ class CSimon : public CGameObject
 	DWORD timeJump;
 	bool checkattach = false;
 	bool checkjump = false;
-	int frame;
+	int frame = -1;
 public:
 	CMorningStar *morningstar;
 	//CAnimation *ani;
 	CSimon(CMorningStar *ms) : CGameObject()
 	{
+		//frame = 0;
 		morningstar = ms;
-		ms->nx = this->nx;
+		//ms->nx = this->nx;
+
 		listvacham.push_back(3);
 		AddAnimation(105);		// dung tai cho phai            0
 		AddAnimation(108);		// dung tai cho trai               1 
@@ -99,7 +101,9 @@ public:
 	bool getcheckjump() { return checkattach; }
 	void SetState(int state);
 	void SetLevel(int l) { level = l; }
-	void StartAttact() { checkattach = true; timeAttact = GetTickCount(); }
+	//void setframe(int frame_x) { this->frame = frame_x; }
+	//int getframe(return frame);
+	void StartAttact() { checkattach = true; timeAttact = GetTickCount(); frame = -1; }
 	//void Startjump() { checkjump = true; timeAttact = GetTickCount(); }
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 };

@@ -30,7 +30,7 @@ struct CCollisionEvent
 
 
 
-class CGameObject
+ class CGameObject
 {
 public:
 
@@ -46,13 +46,15 @@ public:
 	int nx;	 
 
 	int state;
-
+	//check
 	int id_vacham;
+	int type_col_morningtar;
 	vector<int> listvacham;
-
+	vector<int> listvacham_morningtar;
 	DWORD dt; 
 
 	vector<LPANIMATION> animations;
+	bool checkdestroy = false;
 
 public: 
 	void SetPosition(float x, float y) { this->x = x, this->y = y; } // để đặt tọa đọ của vật lúc run game
@@ -83,6 +85,7 @@ public:
 	virtual void Render(float &xcamera, float &ycamera) = 0;
 	virtual void SetState(int state) { this->state = state; }
 
+	virtual void delete_object(vector<LPGAMEOBJECT> &coObjects, int i) {};
 
 	~CGameObject();
 };

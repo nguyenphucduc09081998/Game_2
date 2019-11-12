@@ -30,3 +30,13 @@
 
 /// simon
 #define time_attach_frame 450
+
+/// morning star
+
+#define Morningstar_BBOX_WIDTH  27
+#define Morningstar_BBOX_HEIGHT 15
+
+/// fire
+
+#define FIRE_STATE_DIE 600
+#define FIRE_STATE 500
